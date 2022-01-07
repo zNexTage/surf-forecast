@@ -1,0 +1,28 @@
+{
+  "name": "surf-forecast",
+  "version": "1.0.0",
+  "description": "Typescript Node.js API",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zNexTage/surf-forecast.git"
+  },
+  "keywords": [
+    "NodeJs",
+    "Typescript",
+    "API"
+  ],
+  "author": "Christian de Oliveira",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/zNexTage/surf-forecast/issues"
+  },
+  "homepage": "https://github.com/zNexTage/surf-forecast#readme",
+  "devDependencies": {
+    "@types/node": "^17.0.8",
+    "typescript": "^4.5.4"
+  }
+}
