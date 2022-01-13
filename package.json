@@ -10,6 +10,7 @@
     "start": "npm run build & node dist/src/index.js",
     "start:dev": "ts-node-dev --transpile-only ./src/index.ts",
     "test:functional": "jest --projects ./test --runInBand",
+    "test:unit": "jest",
     "style:check": "prettier --check \"src/**/*.ts\" \"test/**/*.ts\"",
     "style:fix": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -47,6 +48,7 @@
   },
   "dependencies": {
     "@overnightjs/core": "^1.7.6",
+    "axios": "^0.24.0",
     "body-parser": "^1.19.1",
     "express": "^4.17.2",
     "module-alias": "^2.2.2"
