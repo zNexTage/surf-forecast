@@ -41,7 +41,12 @@ class StormGlass {
 
     public async fetchPoints(lat: number, long: number): Promise<Array<IForecastPoint>> {
         const response = await this.request.get<IStormGlassForecastResponse>(`
-        https://api.stormglass.io/v2/weather/point?lat=${lat}&lng=${long}&params=${this.stormGlassApiParams}&source=${this.stormGlassApiSource}
+        https://api.stormglass.io/v2/weather/point?lat=${lat}&lng=${long}&params=${this.stormGlassApiParams}&source=${this.stormGlassApiSource}, 
+        {
+            headers: {
+                Authorization: 'fake token'
+            }
+        }
         `);
 
         return this.normalizeResponse(response.data);
@@ -61,7 +66,7 @@ class StormGlass {
             }))
     }
 
-    private isValidPoint(point: Partial<IStormGlassPoint>): boolean {        
+    private isValidPoint(point: Partial<IStormGlassPoint>): boolean {
         return !!(
             point.time &&
             point.swellDirection?.[this.stormGlassApiSource] &&
@@ -75,5 +80,5 @@ class StormGlass {
     }
 }
 
-export { IStormGlassForecastResponse  };
+export { IStormGlassForecastResponse };
 export default StormGlass;
