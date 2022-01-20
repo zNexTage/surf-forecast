@@ -1,3 +1,4 @@
+import InternalError from '@src/Util/Errors/InternalErrors';
 import { AxiosStatic } from 'axios';
 
 interface IStormGlassPointSource {
@@ -30,6 +31,22 @@ interface IForecastPoint {
     windSpeed: number
 }
 
+class ClientRequestError extends InternalError {
+    constructor(message: string) {
+        const internalMessage = `Unexpected error when trying to communicate to StormGlass`;
+
+        super(`${internalMessage}: ${message}`);
+    }
+}
+
+class StormGlassResponseError extends InternalError {
+    constructor(message: string) {
+        const internalMessage = 'Unexpected error returned by the StormGlass service';
+
+        super(`${internalMessage}: ${message}`);
+    }
+}
+
 class StormGlass {
     private readonly stormGlassApiParams = 'swellDirection,swellHeight,swellPeriod,waveDirection,waveHeight,windDirection,windSpeed';
     private readonly stormGlassApiSource = 'noaa';
@@ -40,7 +57,8 @@ class StormGlass {
     ) { }
 
     public async fetchPoints(lat: number, long: number): Promise<Array<IForecastPoint>> {
-        const response = await this.request.get<IStormGlassForecastResponse>(`
+        try {
+            const response = await this.request.get<IStormGlassForecastResponse>(`
         https://api.stormglass.io/v2/weather/point?lat=${lat}&lng=${long}&params=${this.stormGlassApiParams}&source=${this.stormGlassApiSource}, 
         {
             headers: {
@@ -48,8 +66,14 @@ class StormGlass {
             }
         }
         `);
-
-        return this.normalizeResponse(response.data);
+            return this.normalizeResponse(response.data);
+        }
+        catch (err: any) {
+            if (err.response && err.response.status) {
+                throw new StormGlassResponseError(`Error: ${JSON.stringify(err.response.data)} Code: ${err.response.status}`);
+            }
+            throw new ClientRequestError(err.message);
+        }
     }
 
     private normalizeResponse(points: IStormGlassForecastResponse): Array<IForecastPoint> {
@@ -80,5 +104,5 @@ class StormGlass {
     }
 }
 
-export { IStormGlassForecastResponse };
+export { IStormGlassForecastResponse, ClientRequestError };
 export default StormGlass;
