@@ -6,13 +6,15 @@ import axios from 'axios';
 jest.mock('axios');
 
 describe('StormGlass Client', () => {
+    const mockedAxios = axios as jest.MockedObject<typeof axios>;
+
     it('Should return the normalized forecast from the StormGlass service.', async () => {
         const lat = -33.792726;
         const long = 151.289824;
 
-        axios.get = jest.fn().mockResolvedValue({ data: stormGlassWeatherThreeHoursFixtures });
+        mockedAxios.get.mockResolvedValue({ data: stormGlassWeatherThreeHoursFixtures });
 
-        const stormGlass = new StormGlass(axios);
+        const stormGlass = new StormGlass(mockedAxios);
         const response = await stormGlass.fetchPoints(lat, long);
 
         expect(response).toEqual(stormGlassWeatherNormalizedThreeHoursFixtures);
